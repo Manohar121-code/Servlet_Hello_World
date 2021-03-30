@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/HelloWorld")
-public class HelloWorld extends HttpServlet {
+@WebServlet("/HelloServlet")
+public class HelloServlet extends HttpServlet {
 	private String message;
 
 	public void init() throws ServletException {
@@ -21,18 +21,19 @@ public class HelloWorld extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String userName = request.getParameter("userName");
-		String ageStr = request.getParameter("age");
-		int age = Integer.parseInt(ageStr);
-		HttpSession session = request.getSession(true);
-		session.setAttribute("userName", userName);
-		session.setAttribute("age", age);
+		HttpSession session = request.getSession();
+		Object attribute = session.getAttribute("userName");
+		String userName = null;
+		if (attribute instanceof String) {
+			userName = (String) attribute;
+		}
+		int age = (int) session.getAttribute("age");
 		// Set response content type
 		response.setContentType("text/html");
 
 		// Actual logic goes here.
 		PrintWriter out = response.getWriter();
-		out.println("<h1>" + "Hello - " + " - " + userName + "</h1>");
+		out.println("<h1>" + "Hello " + " - " + userName + " with age - " + age + "</h1>");
 	}
 
 	public void destroy() {
